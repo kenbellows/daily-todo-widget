@@ -1,15 +1,17 @@
 import React, { useState } from 'react'
 import { View, Text, ScrollView, Button, TouchableOpacity } from 'react-native'
-import TodoTask from '../types/TodoTask'
+import TodoTask from '../lib/TodoTask'
 import InlineTextForm from './InlineTextForm'
 import TodoTaskItem from './TodoTaskItem'
 import style from '../styles'
+import TodoTaskList from '../lib/TodoTaskList'
+import { storeTasks } from '../lib/TodoTaskStorage'
 
-type TodoTaskListProps = {
-  tasks: TodoTask[]
+type TodoTaskListViewProps = {
+  taskList: TodoTaskList
 }
 
-export default function TodoTaskList({ tasks }: TodoTaskListProps) {
+export default function TodoTaskListView({ taskList }: TodoTaskListViewProps) {
   const [addingTask, setAddingTask] = useState(false)
   const [editingTask, setEditingTask] = useState<TodoTask | null>(null)
   return (
@@ -18,7 +20,7 @@ export default function TodoTaskList({ tasks }: TodoTaskListProps) {
 
       <View style={style.innerContainer}>
         <ScrollView>
-          {tasks.map((task, key) => (
+          {taskList.active.map((task, key) => (
             <TodoTaskItem
               {...{ task, key }}
               onEdit={() => setEditingTask(task)}
@@ -29,9 +31,10 @@ export default function TodoTaskList({ tasks }: TodoTaskListProps) {
 
       {addingTask ? (
         <InlineTextForm
-          style={{ width: '100%' }}
+          style={{ width: '100%', paddingVertical: 10, paddingHorizontal: 20 }}
           onSubmit={(task) => {
-            tasks.push(new TodoTask(task))
+            taskList.active.push(new TodoTask(task))
+            storeTasks(taskList)
             setAddingTask(false)
           }}
           onCancel={() => setAddingTask(false)}
@@ -42,6 +45,7 @@ export default function TodoTaskList({ tasks }: TodoTaskListProps) {
           initialValue={editingTask!.title}
           onSubmit={(task) => {
             editingTask.title = task
+            storeTasks(taskList)
             setEditingTask(null)
           }}
           onCancel={() => setEditingTask(null)}

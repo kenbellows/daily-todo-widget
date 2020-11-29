@@ -1,24 +1,20 @@
-import React from 'react'
-import { View } from 'react-native'
-import { StatusBar } from 'expo-status-bar'
-import TodoTaskList from './components/TodoTaskList'
-import TodoTask from './types/TodoTask'
+import React, { useEffect, useState } from 'react'
+import { View, Text } from 'react-native'
+import TodoTaskListView from './components/TodoTaskListView'
+import TodoTask from './lib/TodoTask'
+import TodoTaskList from './lib/TodoTaskList'
+import { loadTasks } from './lib/TodoTaskStorage'
 import styles from './styles'
 
 export default function App() {
+  const [tasks, setTasks] = useState<TodoTaskList>()
+  useEffect(() => {
+    loadTasks().then(setTasks)
+  }, [])
+
   return (
     <View style={styles.fullScreen}>
-      <TodoTaskList tasks={testTasks} />
-      {/* <StatusBar style="auto" /> */}
+      {tasks ? <TodoTaskListView taskList={tasks} /> : <Text>Loading...</Text>}
     </View>
   )
 }
-
-const testTasks = [
-  'Test basic tasklist view',
-  'Add nicer styling to the tasklist',
-  "Try scrolling when there's many tasks",
-  'Implement an "Add Task" component/view',
-  'Implement add task functionality',
-  'Persistent storage'
-].map((task) => new TodoTask(task))

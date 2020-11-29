@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, TextInput, ToastAndroid, View } from 'react-native'
-import TodoTask from '../types/TodoTask'
+import TodoTask from '../lib/TodoTask'
 
 type InlineTextFormProps = {
   onSubmit: (text: string) => void
@@ -33,7 +33,9 @@ export default function InlineTextForm({
         onChangeText={setText}
         onSubmitEditing={submit}
         style={{
-          flexGrow: 1
+          flexGrow: 1,
+          fontSize: 16,
+          paddingHorizontal: 20
         }}
         autoFocus
         enablesReturnKeyAutomatically

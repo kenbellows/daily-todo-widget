@@ -39,7 +39,7 @@ export default StyleSheet.create({
     paddingVertical: 25,
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor: 'royalblue',
+    backgroundColor: 'steelblue',
     color: '#fff'
   }
 })
